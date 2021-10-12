@@ -2,7 +2,7 @@
 
 This R code makes it possible to colour protein crystal structures based evolutionary, structural, or functional data associated with specific sites (ex. dN/dS). It generates a sequence selection file (.scf) that can be imported and visualized in UCSF Chimera (Tools > Sequence > Sequence > File > Load SCF/Seqsel File...).  
 
-![Rhodopsin interior vs exterior dN/dS](https://github.com/alexvannynatten/Colour-crystal-structures/blob/f654c81bd47f1e98e1c38cade28d395b5de0e1be/rho_dnds_out.png)
+![Rhodopsin interior vs exterior dN/dS](https://github.com/alexvannynatten/Colour-crystal-structures/blob/201f783f508dc85ac6aff6967cdab7d1ab375350/rho_dnds.png)
 
 ## Required:
 
