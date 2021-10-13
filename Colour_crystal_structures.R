@@ -2,8 +2,8 @@ aa_val <- read.table('rho_dnds.tsv', sep = '\t', header = TRUE)
 
 # Number of bins and colour scheme can be modified
 cut_df <- data.frame(
-	Bins = c(0.005, 0.05, 0.5, 5),
-	Colours = c('#004784', '#3f72aa', '#78a4a5', '#9edc66')
+	Bins = c(0.001, 0.01, 0.1, 1, 10),
+	Colours = c('#00284c', '#21377e', '#5a42a3', '#a441b0', '#ff008c')
 	)
 
 aa_val$Bin_Colour <-cut(as.numeric(aa_val[[2]]), 
@@ -24,5 +24,5 @@ write.table(aa_val[c(1,4,5,6,7)], "chimera_col_data.scf",
 
 barplot(rev(cut_df$Bins), col=rev(cut_df$Colours), space = -1, 
 	ylab="dN/dS", 
-	ylim = c(min(aa_val[2]), max(aa_val[2])), 
+	ylim = c(0.0001, 10), 
 	log="y")
