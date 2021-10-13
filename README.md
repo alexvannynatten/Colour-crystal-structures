@@ -13,8 +13,11 @@ This R code makes it possible to colour protein crystal structures based evoluti
 
 ## Use:
 
-For USCF Chimera 1.15: Tools > Sequence > Sequence > File > Load SCF/Seqsel File...). 
-For UCSF Chimera X: Tools > Sequence > Show Sequence Viewer, in sequence viewer left click > File > Load Sequence Colouring File... (make sure "Also color associated structure" is selected).
+chimera_col_data.scf output file can be mapped to crystal structure as follows: 
+
+For USCF Chimera 1.15: Tools > Sequence > Sequence > File > Load SCF/Seqsel File...)
+
+For UCSF Chimera X: Tools > Sequence > Show Sequence Viewer. In sequence viewer: left click on sequence > File > Load Sequence Colouring File... (make sure "Also color associated structure" is selected)
 
 ## R code:
 
