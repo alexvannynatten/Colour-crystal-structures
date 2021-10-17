@@ -13,40 +13,56 @@ This R code makes it possible to colour protein crystal structures based evoluti
 
 ## Use:
 
-chimera_col_data.scf output file can be mapped to crystal structure as follows: 
+1. Ensure that the numbering for your site-associated values and PDB file are consistent 
 
-For USCF Chimera 1.15: Tools > Sequence > Sequence > File > Load SCF/Seqsel File...)
+2. Set bin values and colour scale based on the site-assocaited values for your protein (example uses a log scale)
 
-For UCSF Chimera X: Tools > Sequence > Show Sequence Viewer. In sequence viewer: left click on sequence > File > Load Sequence Colouring File... (make sure "Also color associated structure" is selected)
+3. "structure_site_col.scf" output file can be mapped to crystal structure as follows: 
+
+	i. For USCF Chimera 1.15: Tools > Sequence > Sequence > File > Load SCF/Seqsel File...)
+
+	ii. For UCSF Chimera X: Tools > Sequence > Show Sequence Viewer. In sequence viewer: left click on sequence > File > Load Sequence Colouring File... (make sure "Also color associated structure" is selected)
 
 ## R code:
 
 ```r
-aa_val <- read.table('rho_dnds.tsv', sep = '\t', header = TRUE)
+# Tab-delimited file with sites in first column and values in second
+aa_df <- read.table('vert_rho_dnds.tsv', sep = '\t', header = TRUE)
 
-# Number of bins and colour scheme can be modified
-cut_df <- data.frame(
-	Bins = c(0.001, 0.01, 0.1, 1, 10),
-	Colours = c('#00284c', '#21377e', '#5a42a3', '#a441b0', '#ff008c')
-	)
+# Bin widths and colours for the range of site-associated values
+col_df <- data.frame(
+			Bins = c(0.001, 0.01, 0.1, 1, 10),
+			Colours = c('#00284c', 
+						'#21377e', 
+						'#5a42a3', 
+						'#a441b0', 
+						'#ff008c')
+			)
 
-aa_val$Bin_Colour <-cut(as.numeric(aa_val[[2]]), 
-	breaks = c(0,cut_df$Bins),
-	labels = cut_df$Colours)
+# Bins each site and assigns colour by the site-associated value
+aa_df$Hex_col <- cut(as.numeric(aa_df[[2]]), 
+					breaks = c(0,col_df$Bins),
+					labels = col_df$Colours
+					)
 
-aa_val$model <- 0
+# Converts HEX colours to RGB values and makes dataframe for output
+out_df <- data.frame(
+			Site = aa_df[1], 
+			Model = 0,
+			Red = col2rgb(as.character(aa_df$Hex_col))[1, ],
+			Green = col2rgb(as.character(aa_df$Hex_col))[2, ],
+			Blue = col2rgb(as.character(aa_df$Hex_col))[3, ]
+			)
 
-for(i in 1:nrow(aa_val)){
-	j <- col2rgb(as.character(aa_val$Bin_Colour[i]))
-	aa_val$Red[i] <- j[[1]]
-	aa_val$Green[i] <- j[[2]]
-	aa_val$Blue[i] <- j[[3]]
-}
+# Writes a .scf file that is can be imported into UCSF Chimera
+write.table(out_df, "structure_site_col.scf", 
+			col.names = F, row.names = F, sep="\t"
+			)
 
-write.table(aa_val[c(1,4,5,6,7)], "chimera_col_data.scf", 
-	col.names = F, row.names = F, sep="\t")
-
-barplot(rev(cut_df$Bins), col=rev(cut_df$Colours), space = -1, 
-	ylab="dN/dS", 
-	ylim = c(0.0001, 10), 
-	log="y")
+# Plots the colour palette for the legend
+barplot(rev(col_df$Bins), col=rev(col_df$Colours), 
+		space = -1, 
+		ylab="dN/dS", 
+		ylim = c(0.0001, 10), 
+		log="y"
+		)
